@@ -86,6 +86,11 @@ def embedded_document_strat(field):
     return documents(field.document_type)
 
 
+@field_strat(mongoengine.BinaryField)
+def binary_strat(field):
+    return strat.builds(bson.Binary, strat.binary(max_size=field.max_bytes))
+
+
 def _inner_field_values(field):
     if field.choices is not None:
         return strat.sampled_from(field.choices)
