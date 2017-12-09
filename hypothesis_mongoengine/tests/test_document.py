@@ -1,6 +1,6 @@
 from bson import BSON
 from hypothesis import given, note
-from mongoengine import Document, fields
+from mongoengine import Document, EmbeddedDocument, fields
 from pytest import approx
 
 from ..strategies import documents
@@ -21,6 +21,10 @@ class Foo(Document):
     bounded_float = fields.FloatField(min_value=0.0, max_value=1.0)
     boolean = fields.BooleanField()
     datetime = fields.DateTimeField()
+
+    @fields.EmbeddedDocumentField
+    class embedded_bar(EmbeddedDocument):
+        bar = fields.StringField()
 
 
 @given(documents(Foo))

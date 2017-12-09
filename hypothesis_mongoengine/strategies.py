@@ -81,6 +81,11 @@ def datetime_strat(field):
         lambda dt: dt.replace(microsecond=(dt.microsecond // 1000 * 1000)))
 
 
+@field_strat(mongoengine.EmbeddedDocumentField)
+def embedded_document_strat(field):
+    return documents(field.document_type)
+
+
 def _inner_field_values(field):
     if field.choices is not None:
         return strat.sampled_from(field.choices)
