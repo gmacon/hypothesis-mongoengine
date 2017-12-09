@@ -1,8 +1,7 @@
-import math
-
 from bson import BSON
 from hypothesis import given, note
 from mongoengine import Document, fields
+from pytest import approx
 
 from ..strategies import documents
 
@@ -30,28 +29,8 @@ def test_document_validates(doc):
     doc.validate()  # Throws when invalid
 
 
-def recursive_eq_including_nan(a, b):
-    if type(a) != type(b):
-        return False
-
-    if isinstance(a, dict):
-        if a.keys() != b.keys():
-            return False
-        return all(recursive_eq_including_nan(a[k], b[k]) for k in a)
-
-    if isinstance(a, list):
-        if len(a) != len(b):
-            return False
-        return all(recursive_eq_including_nan(x, y) for x, y in zip(a, b))
-
-    if isinstance(a, float) and math.isnan(a) and math.isnan(b):
-        return True
-
-    return a == b
-
-
 @given(documents(Foo))
 def test_document_serializes_deserializes(doc):
     note(doc.to_json())
     son = doc.to_mongo()
-    assert recursive_eq_including_nan(BSON.encode(son).decode(), son.to_dict())
+    assert BSON.encode(son).decode() == approx(son.to_dict(), nan_ok=True)
