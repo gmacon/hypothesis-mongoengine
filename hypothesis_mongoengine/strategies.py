@@ -98,6 +98,14 @@ def complex_datetime_strat(field):
     return strat.datetimes()
 
 
+@field_strat(mongoengine.MapField)
+def map_strat(field):
+    return strat.dictionaries(
+        keys=strat.text(strat.characters(blacklist_characters='\0.$',
+                                         blacklist_categories=['Cs'])),
+        values=_inner_field_values(field.field))
+
+
 def _inner_field_values(field):
     if field.choices is not None:
         return strat.sampled_from(field.choices)

@@ -24,6 +24,7 @@ class Foo(Document):
     complex_datetime = fields.ComplexDateTimeField()
     binary = fields.BinaryField()
     bounded_binary = fields.BinaryField(max_bytes=8)
+    mapping = fields.MapField(fields.StringField())
 
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
