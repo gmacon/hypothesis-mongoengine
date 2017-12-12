@@ -20,6 +20,7 @@ class Foo(Document):
     bounded_float = fields.FloatField(min_value=0.0, max_value=1.0)
     boolean = fields.BooleanField()
     datetime = fields.DateTimeField()
+    complex_datetime = fields.ComplexDateTimeField()
     binary = fields.BinaryField()
     bounded_binary = fields.BinaryField(max_bytes=8)
 

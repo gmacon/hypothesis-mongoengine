@@ -91,6 +91,11 @@ def binary_strat(field):
     return strat.builds(bson.Binary, strat.binary(max_size=field.max_bytes))
 
 
+@field_strat(mongoengine.ComplexDateTimeField)
+def complex_datetime_strat(field):
+    return strat.datetimes()
+
+
 def _inner_field_values(field):
     if field.choices is not None:
         return strat.sampled_from(field.choices)
