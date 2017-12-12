@@ -1,3 +1,5 @@
+import uuid
+
 import bson
 import hypothesis.strategies as strat
 import mongoengine
@@ -104,6 +106,11 @@ def map_strat(field):
         keys=strat.text(strat.characters(blacklist_characters='\0.$',
                                          blacklist_categories=['Cs'])),
         values=_inner_field_values(field.field))
+
+
+@field_strat(mongoengine.UUIDField)
+def uuid_strat(field):
+    return strat.builds(uuid.uuid4)
 
 
 def _inner_field_values(field):

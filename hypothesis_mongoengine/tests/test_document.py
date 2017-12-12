@@ -25,6 +25,7 @@ class Foo(Document):
     binary = fields.BinaryField()
     bounded_binary = fields.BinaryField(max_bytes=8)
     mapping = fields.MapField(fields.StringField())
+    uuid = fields.UUIDField()
 
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
