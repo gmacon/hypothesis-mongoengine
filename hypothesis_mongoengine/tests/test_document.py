@@ -12,6 +12,7 @@ class Foo(Document):
     regex = fields.StringField(regex=r'^[a-z]*$')
     length = fields.StringField(min_length=1, max_length=3)
     strings = fields.ListField(fields.StringField())
+    sorted_strings = fields.SortedListField(fields.StringField())
     integer = fields.IntField()
     bounded_int = fields.IntField(min_value=0, max_value=10)
     longeger = fields.LongField()
@@ -27,6 +28,10 @@ class Foo(Document):
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
         bar = fields.StringField()
+
+    @fields.EmbeddedDocumentListField
+    class embedded_baz(EmbeddedDocument):
+        baz = fields.StringField()
 
 
 @given(documents(Foo))

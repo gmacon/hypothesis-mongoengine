@@ -29,6 +29,8 @@ def string_strat(field):
     return strat.text(min_size=field.min_length, max_size=field.max_length)
 
 
+@field_strat(mongoengine.EmbeddedDocumentListField)
+@field_strat(mongoengine.SortedListField)
 @field_strat(mongoengine.ListField)
 def list_strat(field):
     return strat.lists(_inner_field_values(field.field))
