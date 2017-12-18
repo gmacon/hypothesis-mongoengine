@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 import bson
@@ -99,7 +100,7 @@ def binary_strat(field):
 
 @field_strat(mongoengine.ComplexDateTimeField)
 def complex_datetime_strat(field):
-    return strat.datetimes()
+    return strat.datetimes(min_value=datetime.datetime(1900, 1, 1))
 
 
 @field_strat(mongoengine.MapField)
