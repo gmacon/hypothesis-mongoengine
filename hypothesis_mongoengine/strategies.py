@@ -152,9 +152,12 @@ def multi_polygon_strat(field):
 
 def _inner_field_values(field):
     if field.choices is not None:
-        return strat.sampled_from(field.choices)
+        values = strat.sampled_from(field.choices)
     else:
-        return field_strats[field.__class__](field)
+        values = field_strats[field.__class__](field)
+    if field.validation is not None:
+        values = values.filter(field.validation)
+    return values
 
 
 def field_values(field):

@@ -37,6 +37,9 @@ class Foo(Document):
     lines = fields.MultiLineStringField()
     polygons = fields.MultiPolygonField()
 
+    even_length_string = fields.StringField(
+        validation=lambda s: len(s) % 2 == 0)
+
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
         bar = fields.StringField()
