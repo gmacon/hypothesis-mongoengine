@@ -27,6 +27,16 @@ class Foo(Document):
     mapping = fields.MapField(fields.StringField())
     uuid = fields.UUIDField()
 
+    old_geopoint = fields.GeoPointField()
+
+    point = fields.PointField()
+    line = fields.LineStringField()
+    polygon = fields.PolygonField()
+
+    points = fields.MultiPointField()
+    lines = fields.MultiLineStringField()
+    polygons = fields.MultiPolygonField()
+
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
         bar = fields.StringField()

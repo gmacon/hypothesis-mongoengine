@@ -4,6 +4,8 @@ import bson
 import hypothesis.strategies as strat
 import mongoengine
 
+from .geojson import line_strings, points, polygons
+
 
 field_strats = {}
 
@@ -111,6 +113,41 @@ def map_strat(field):
 @field_strat(mongoengine.UUIDField)
 def uuid_strat(field):
     return strat.builds(uuid.uuid4)
+
+
+@field_strat(mongoengine.GeoPointField)
+def geo_point_strat(field):
+    return points()
+
+
+@field_strat(mongoengine.PointField)
+def point_strat(field):
+    return points()
+
+
+@field_strat(mongoengine.LineStringField)
+def line_string_strat(field):
+    return line_strings()
+
+
+@field_strat(mongoengine.PolygonField)
+def polygon_strat(field):
+    return polygons()
+
+
+@field_strat(mongoengine.MultiPointField)
+def multi_point_strat(field):
+    return strat.lists(points(), min_size=1)
+
+
+@field_strat(mongoengine.MultiLineStringField)
+def multi_line_string_strat(field):
+    return strat.lists(line_strings(), min_size=1)
+
+
+@field_strat(mongoengine.MultiPolygonField)
+def multi_polygon_strat(field):
+    return strat.lists(polygons(), min_size=1)
 
 
 def _inner_field_values(field):
