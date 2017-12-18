@@ -15,7 +15,8 @@ setup(
     description='Hypothesis strategy for MongoEngine models',
     long_description=long_description,
     url='https://github.com/gmacon/hypothesis_mongoengine',
-    author='George Macon <george.macon@gmail.com>',
+    author='George Macon',
+    author_email='george.macon@gmail.com',
     license='MIT',
     packages=find_packages(exclude='*.tests'),
     install_requires=[
