@@ -18,7 +18,7 @@ setup(
     author='George Macon',
     author_email='george.macon@gmail.com',
     license='MIT',
-    packages=find_packages(exclude='*.tests'),
+    packages=find_packages(exclude=('*.tests',)),
     install_requires=[
         'hypothesis',
         'mongoengine',
