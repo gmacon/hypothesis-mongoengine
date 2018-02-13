@@ -14,7 +14,7 @@ setup(
     version='1.0.0',
     description='Hypothesis strategy for MongoEngine models',
     long_description=long_description,
-    url='https://github.com/gmacon/hypothesis_mongoengine',
+    url='https://github.com/gmacon/hypothesis-mongoengine',
     author='George Macon',
     author_email='george.macon@gmail.com',
     license='MIT',
