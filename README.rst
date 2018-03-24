@@ -43,6 +43,7 @@ What's Not Supported
 You can, and should, provide an application-specific strategy for these fields.
 This permits you to ensure that the referential-integrity constraints needed by your application are satisfied.
 Don't forget that MongoEngine expects the documents to have been saved to the database before you try to reference them.
+You can use the ``hypothesis_mongoengine.helpers.mark_saved`` function to make a document appear as if saved.
 
 ``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate only the explicitly-specified fields.
 
