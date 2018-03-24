@@ -11,7 +11,7 @@ with io.open(os.path.join(os.path.dirname(__file__), 'README.rst'),
 
 setup(
     name='hypothesis-mongoengine',
-    version='1.0.1',
+    version='1.1.0',
     description='Hypothesis strategy for MongoEngine models',
     long_description=long_description,
     url='https://github.com/gmacon/hypothesis-mongoengine',
