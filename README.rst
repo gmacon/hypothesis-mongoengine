@@ -47,7 +47,7 @@ Don't forget that MongoEngine expects the documents to have been saved to the da
 ``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate only the explicitly-specified fields.
 
 ``DynamicField`` is normally used internally by ``DynamicDocument``,
-but if you have a model which references it explicitly, it won't by handled generically.
+but if you have a model which references it explicitly, it won't be handled generically.
 
 Handling Custom Fields
 ----------------------
