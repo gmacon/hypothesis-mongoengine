@@ -1,6 +1,8 @@
 Hypothesis Strategy for MongoEngine
 ===================================
 
+.. image:: https://travis-ci.org/gmacon/hypothesis-mongoengine.svg?branch=master
+
 This package contains a `Hypothesis <http://hypothesis.works/>`_ strategy for generating example documents from a `MongoEngine <http://mongoengine.org/>`_ model.
 
 Here's a minimal example::
