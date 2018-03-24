@@ -103,11 +103,15 @@ def complex_datetime_strat(field):
     return strat.datetimes(min_value=datetime.datetime(1900, 1, 1))
 
 
+def mongodb_keys():
+    return strat.text(strat.characters(blacklist_characters='\0.$',
+                                       blacklist_categories=['Cs']))
+
+
 @field_strat(mongoengine.MapField)
 def map_strat(field):
     return strat.dictionaries(
-        keys=strat.text(strat.characters(blacklist_characters='\0.$',
-                                         blacklist_categories=['Cs'])),
+        keys=mongodb_keys(),
         values=_inner_field_values(field.field))
 
 

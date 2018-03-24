@@ -45,6 +45,11 @@ This permits you to ensure that the referential-integrity constraints needed by 
 Don't forget that MongoEngine expects the documents to have been saved to the database before you try to reference them.
 You can use the ``hypothesis_mongoengine.helpers.mark_saved`` function to make a document appear as if saved.
 
+``DictField`` is not generically supported and probably will never be.
+``MapField`` is supported generically and should be preferred to ``DictField`` when the values are homogenous.
+When writing custom strategies for a ``DictField``,
+you can use the ``hypothesis_mongoengine.strategies.mongodb_keys`` strategy to generate the keys in the absence of more specific application knowledge about the keys.
+
 ``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate only the explicitly-specified fields.
 
 ``DynamicField`` is normally used internally by ``DynamicDocument``,
