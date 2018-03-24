@@ -1,9 +1,13 @@
 Hypothesis Strategy for MongoEngine
 ===================================
 
+.. image:: https://travis-ci.org/gmacon/hypothesis-mongoengine.svg?branch=master
+
 This package contains a `Hypothesis <http://hypothesis.works/>`_ strategy for generating example documents from a `MongoEngine <http://mongoengine.org/>`_ model.
 
-Here's a minimal example::
+Here's a minimal example:
+
+.. code:: python
 
     from hypothesis import given, note
     from hypothesis_mongoengine.strategies import documents
@@ -22,7 +26,9 @@ Here's a minimal example::
         assert hasattr(foo, 'id')
 
 
-You can customize the generation of examples by passing alternate strategies for each field as keyword arguments::
+You can customize the generation of examples by passing alternate strategies for each field as keyword arguments:
+
+.. code:: python
 
     @given(documents(Foo, foo=strategies.strings(max_size=7)))
     def test_another thing(foo):
@@ -48,7 +54,7 @@ You can use the ``hypothesis_mongoengine.helpers.mark_saved`` function to make a
 ``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate only the explicitly-specified fields.
 
 ``DynamicField`` is normally used internally by ``DynamicDocument``,
-but if you have a model which references it explicitly, it won't by handled generically.
+but if you have a model which references it explicitly, it won't be handled generically.
 
 Handling Custom Fields
 ----------------------
@@ -56,23 +62,27 @@ Handling Custom Fields
 If you have a custom field in use in your application,
 you can register a strategy to generate examples for it using the ``field_strat`` decorator.
 
-For example, a strategy for the ``EnumField`` from `extras-mongoengine <https://github.com/MongoEngine/extras-mongoengine>`_ could look like this::
+For example, a strategy for the ``EnumField`` from `extras-mongoengine <https://github.com/MongoEngine/extras-mongoengine>`_ could look like this:
+
+.. code:: python
 
     from extras_mongoengine.fields import EnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine import field_strat
+    from hypothesis_mongoengine.strategies import field_strat
 
     @field_strat(EnumField)
     def my_custom_strat(field):
         return strategies.sampled_from(field.enum)
 
-The fields are looked up in the registry by their names,
+The fields are looked up in the registry by equality of the classes,
 so if you have a hierarchy of custom fields, you must register the leaf types.
-You can, however, stack the decorator several times if you need to::
+You can, however, stack the decorator several times if you need to:
+
+.. code:: python
 
     from extras_mongoengine.fields import EnumField, IntEnumField, StringEnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine import field_strat
+    from hypothesis_mongoengine.strategies import field_strat
 
     @field_strat(EnumField)
     @field_strat(IntEnumField)
