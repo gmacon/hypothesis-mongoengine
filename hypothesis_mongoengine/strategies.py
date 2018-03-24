@@ -169,5 +169,5 @@ def field_values(field):
 
 
 def documents(doc_class, **kwargs):
-    return strat.builds(doc_class, **{k: kwargs.get(k, field_values(v))
+    return strat.builds(doc_class, **{k: (kwargs.get(k) or field_values(v))
                                       for k, v in doc_class._fields.items()})
