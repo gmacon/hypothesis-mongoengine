@@ -67,7 +67,7 @@ For example, a strategy for the ``EnumField`` from `extras-mongoengine <https://
 
     from extras_mongoengine.fields import EnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine import field_strat
+    from hypothesis_mongoengine.strategies import field_strat
 
     @field_strat(EnumField)
     def my_custom_strat(field):
@@ -81,7 +81,7 @@ You can, however, stack the decorator several times if you need to:
 
     from extras_mongoengine.fields import EnumField, IntEnumField, StringEnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine import field_strat
+    from hypothesis_mongoengine.strategies import field_strat
 
     @field_strat(EnumField)
     @field_strat(IntEnumField)
