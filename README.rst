@@ -65,7 +65,7 @@ For example, a strategy for the ``EnumField`` from `extras-mongoengine <https://
     def my_custom_strat(field):
         return strategies.sampled_from(field.enum)
 
-The fields are looked up in the registry by their names,
+The fields are looked up in the registry by equality of the classes,
 so if you have a hierarchy of custom fields, you must register the leaf types.
 You can, however, stack the decorator several times if you need to::
 
