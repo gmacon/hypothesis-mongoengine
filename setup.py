@@ -1,7 +1,7 @@
 import io
 import os.path
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 with io.open(os.path.join(os.path.dirname(__file__), 'README.rst'),
@@ -18,7 +18,6 @@ setup(
     author='George Macon',
     author_email='george.macon@gmail.com',
     license='MIT',
-    packages=find_packages(exclude=('*.tests',)),
     install_requires=[
         'hypothesis',
         'mongoengine',
