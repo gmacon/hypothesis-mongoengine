@@ -2,20 +2,20 @@ import datetime
 import uuid
 
 import bson
-import hypothesis.strategies as strat
+import hypothesis.strategies as st
 import mongoengine
 
 from .geojson import line_strings, points, polygons
 
 
-field_strats = {}
+field_strategies = {}
 
 
 def register_field(field_class, strategy):
-    field_strats[field_class] = strategy
+    field_strategies[field_class] = strategy
 
 
-def field_strat(field_class):
+def field_strategy(field_class):
     def wrapper(f):
         register_field(field_class, f)
         return f
@@ -23,26 +23,26 @@ def field_strat(field_class):
     return wrapper
 
 
-@field_strat(mongoengine.ObjectIdField)
+@field_strategy(mongoengine.ObjectIdField)
 def objectid_strat(field):
-    return strat.builds(bson.ObjectId)
+    return st.builds(bson.ObjectId)
 
 
-@field_strat(mongoengine.StringField)
+@field_strategy(mongoengine.StringField)
 def string_strat(field):
     if field.regex:
-        return strat.from_regex(field.regex)
-    return strat.text(min_size=field.min_length, max_size=field.max_length)
+        return st.from_regex(field.regex)
+    return st.text(min_size=field.min_length or 0, max_size=field.max_length)
 
 
-@field_strat(mongoengine.EmbeddedDocumentListField)
-@field_strat(mongoengine.SortedListField)
-@field_strat(mongoengine.ListField)
+@field_strategy(mongoengine.EmbeddedDocumentListField)
+@field_strategy(mongoengine.SortedListField)
+@field_strategy(mongoengine.ListField)
 def list_strat(field):
-    return strat.lists(_inner_field_values(field.field))
+    return st.lists(_inner_field_values(field.field))
 
 
-@field_strat(mongoengine.IntField)
+@field_strategy(mongoengine.IntField)
 def int_strat(field):
     if field.min_value is None:
         min_value = -(2**31)
@@ -54,10 +54,10 @@ def int_strat(field):
     else:
         max_value = field.max_value
 
-    return strat.integers(min_value=min_value, max_value=max_value)
+    return st.integers(min_value=min_value, max_value=max_value)
 
 
-@field_strat(mongoengine.LongField)
+@field_strategy(mongoengine.LongField)
 def long_strat(field):
     if field.min_value is None:
         min_value = -(2**63)
@@ -69,102 +69,113 @@ def long_strat(field):
     else:
         max_value = field.max_value
 
-    return strat.integers(min_value=min_value, max_value=max_value)
+    return st.integers(min_value=min_value, max_value=max_value)
 
 
-@field_strat(mongoengine.FloatField)
+@field_strategy(mongoengine.FloatField)
 def float_strat(field):
-    return strat.floats(min_value=field.min_value, max_value=field.max_value)
+    return st.floats(min_value=field.min_value, max_value=field.max_value)
 
 
-@field_strat(mongoengine.BooleanField)
+@field_strategy(mongoengine.BooleanField)
 def boolean_strat(field):
-    return strat.booleans()
+    return st.booleans()
 
 
-@field_strat(mongoengine.DateTimeField)
+@field_strategy(mongoengine.DateTimeField)
 def datetime_strat(field):
     # MongoDB datetimes have only millisecond precision
-    return strat.datetimes().map(
+    return st.datetimes().map(
         lambda dt: dt.replace(microsecond=(dt.microsecond // 1000 * 1000))
     )
 
 
-@field_strat(mongoengine.EmbeddedDocumentField)
+@field_strategy(mongoengine.EmbeddedDocumentField)
 def embedded_document_strat(field):
     return documents(field.document_type)
 
 
-@field_strat(mongoengine.BinaryField)
+@field_strategy(mongoengine.BinaryField)
 def binary_strat(field):
-    return strat.builds(bson.Binary, strat.binary(max_size=field.max_bytes))
+    return st.builds(bson.Binary, st.binary(max_size=field.max_bytes))
 
 
-@field_strat(mongoengine.ComplexDateTimeField)
+@field_strategy(mongoengine.ComplexDateTimeField)
 def complex_datetime_strat(field):
-    return strat.datetimes(min_value=datetime.datetime(1900, 1, 1))
+    return st.datetimes(min_value=datetime.datetime(1900, 1, 1))
 
 
 def mongodb_keys():
-    return strat.text(
-        strat.characters(blacklist_characters="\0.$", blacklist_categories=["Cs"])
+    return st.text(
+        st.characters(blacklist_characters="\0.$", blacklist_categories=["Cs"])
     )
 
 
-@field_strat(mongoengine.MapField)
+@field_strategy(mongoengine.MapField)
 def map_strat(field):
-    return strat.dictionaries(
-        keys=mongodb_keys(), values=_inner_field_values(field.field)
-    )
+    return st.dictionaries(keys=mongodb_keys(), values=_inner_field_values(field.field))
 
 
-@field_strat(mongoengine.UUIDField)
+@field_strategy(mongoengine.UUIDField)
 def uuid_strat(field):
-    return strat.builds(uuid.uuid4)
+    return st.builds(uuid.uuid4)
 
 
-@field_strat(mongoengine.GeoPointField)
+@field_strategy(mongoengine.GeoPointField)
 def geo_point_strat(field):
     return points()
 
 
-@field_strat(mongoengine.PointField)
+@field_strategy(mongoengine.PointField)
 def point_strat(field):
     return points()
 
 
-@field_strat(mongoengine.LineStringField)
+@field_strategy(mongoengine.LineStringField)
 def line_string_strat(field):
     return line_strings()
 
 
-@field_strat(mongoengine.PolygonField)
+@field_strategy(mongoengine.PolygonField)
 def polygon_strat(field):
     return polygons()
 
 
-@field_strat(mongoengine.MultiPointField)
+@field_strategy(mongoengine.MultiPointField)
 def multi_point_strat(field):
-    return strat.lists(points(), min_size=1)
+    return st.lists(points(), min_size=1)
 
 
-@field_strat(mongoengine.MultiLineStringField)
+@field_strategy(mongoengine.MultiLineStringField)
 def multi_line_string_strat(field):
-    return strat.lists(line_strings(), min_size=1)
+    return st.lists(line_strings(), min_size=1)
 
 
-@field_strat(mongoengine.MultiPolygonField)
+@field_strategy(mongoengine.MultiPolygonField)
 def multi_polygon_strat(field):
-    return strat.lists(polygons(), min_size=1)
+    return st.lists(polygons(), min_size=1)
+
+
+def validation_adapter(validator):
+    def adapted(value):
+        try:
+            rv = validator(value)
+        except mongoengine.ValidationError:
+            return False
+        if rv is None:
+            return True
+        return rv
+
+    return adapted
 
 
 def _inner_field_values(field):
     if field.choices is not None:
-        values = strat.sampled_from(field.choices)
+        values = st.sampled_from(field.choices)
     else:
-        values = field_strats[field.__class__](field)
+        values = field_strategies[field.__class__](field)
     if field.validation is not None:
-        values = values.filter(field.validation)
+        values = values.filter(validation_adapter(field.validation))
     return values
 
 
@@ -172,11 +183,14 @@ def field_values(field):
     if field.required:
         return _inner_field_values(field)
     else:
-        return strat.one_of(strat.none(), _inner_field_values(field))
+        return st.one_of(st.none(), _inner_field_values(field))
 
 
 def documents(doc_class, **kwargs):
-    return strat.builds(
-        doc_class,
-        **{k: (kwargs.get(k) or field_values(v)) for k, v in doc_class._fields.items()},
-    )
+    builds_kwargs = {}
+    for k, v in doc_class._fields.items():
+        if k in kwargs:
+            builds_kwargs[k] = kwargs[k]
+        else:
+            builds_kwargs[k] = field_values(v)
+    return st.builds(doc_class, **builds_kwargs)

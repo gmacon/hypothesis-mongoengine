@@ -1,8 +1,13 @@
-from bson import BSON
-from hypothesis import given, note
-from mongoengine import Document, EmbeddedDocument, fields
+import bson
+from hypothesis import given
+from mongoengine import Document, EmbeddedDocument, fields, ValidationError
 
-from ..strategies import documents
+from hypothesis_mongoengine.strategies import documents
+
+
+def validate_even_length_string(value):
+    if len(value) % 2 != 0:
+        raise ValidationError("String length must be even")
 
 
 class Foo(Document):
@@ -37,7 +42,7 @@ class Foo(Document):
     lines = fields.MultiLineStringField()
     polygons = fields.MultiPolygonField()
 
-    even_length_string = fields.StringField(validation=lambda s: len(s) % 2 == 0)
+    even_length_string = fields.StringField(validation=validate_even_length_string)
 
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
@@ -50,15 +55,18 @@ class Foo(Document):
 
 @given(documents(Foo))
 def test_document_validates(doc):
-    note(doc.to_json())
     doc.validate()  # Throws when invalid
 
 
 @given(documents(Foo))
 def test_document_serializes_deserializes(doc):
-    note(doc.to_json())
     son = doc.to_mongo()
-    BSON.encode(son).decode()
+
+    codec_options = bson.CodecOptions(
+        uuid_representation=bson.binary.UuidRepresentation.STANDARD
+    )
+    raw = bson.encode(son, codec_options=codec_options)
+    _round_tripped = bson.decode(raw, codec_options=codec_options)
     # There are some issues comparing the round-tripped version to the
     # original:
     #
