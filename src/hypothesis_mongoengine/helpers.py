@@ -10,13 +10,13 @@ def mark_saved(doc, validate=True, clean=True, signal_kwargs=None, **kwargs):
     :meth:`mongoengine.Document.save` except actually talking to a database.
 
     """
-    if doc._meta.get('abstract'):
+    if doc._meta.get("abstract"):
         raise mongoengine.errors.InvalidDocumentError(
-            'Cannot save an abstract document.')
+            "Cannot save an abstract document."
+        )
 
     signal_kwargs = signal_kwargs or {}
-    mongoengine.signals.pre_save.send(
-        doc.__class__, document=doc, **signal_kwargs)
+    mongoengine.signals.pre_save.send(doc.__class__, document=doc, **signal_kwargs)
 
     if validate:
         doc.validate(clean=clean)
@@ -24,13 +24,15 @@ def mark_saved(doc, validate=True, clean=True, signal_kwargs=None, **kwargs):
     created = doc.pk is None or doc._created
 
     mongoengine.signals.pre_save_post_validation.send(
-        doc.__class__, document=doc, created=created, **signal_kwargs)
+        doc.__class__, document=doc, created=created, **signal_kwargs
+    )
 
     if doc.pk is None:
         doc.pk = bson.ObjectId()
 
     mongoengine.signals.post_save.send(
-        doc.__class__, document=doc, created=created, **signal_kwargs)
+        doc.__class__, document=doc, created=created, **signal_kwargs
+    )
 
     doc._clear_changed_fields()
     doc._created = False

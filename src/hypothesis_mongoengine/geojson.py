@@ -1,12 +1,14 @@
 from hypothesis import strategies as strat
 
 
-__all__ = ('points', 'line_strings', 'polygons')
+__all__ = ("points", "line_strings", "polygons")
 
 
 def points():
-    return strat.tuples(strat.floats(min_value=-180.0, max_value=180.0),
-                        strat.floats(min_value=-90.0, max_value=90.0))
+    return strat.tuples(
+        strat.floats(min_value=-180.0, max_value=180.0),
+        strat.floats(min_value=-90.0, max_value=90.0),
+    )
 
 
 @strat.composite

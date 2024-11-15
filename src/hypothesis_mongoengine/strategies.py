@@ -19,6 +19,7 @@ def field_strat(field_class):
     def wrapper(f):
         register_field(field_class, f)
         return f
+
     return wrapper
 
 
@@ -44,12 +45,12 @@ def list_strat(field):
 @field_strat(mongoengine.IntField)
 def int_strat(field):
     if field.min_value is None:
-        min_value = -(2 ** 31)
+        min_value = -(2**31)
     else:
         min_value = field.min_value
 
     if field.max_value is None:
-        max_value = 2 ** 31 - 1
+        max_value = 2**31 - 1
     else:
         max_value = field.max_value
 
@@ -59,12 +60,12 @@ def int_strat(field):
 @field_strat(mongoengine.LongField)
 def long_strat(field):
     if field.min_value is None:
-        min_value = -(2 ** 63)
+        min_value = -(2**63)
     else:
         min_value = field.min_value
 
     if field.max_value is None:
-        max_value = 2 ** 63 - 1
+        max_value = 2**63 - 1
     else:
         max_value = field.max_value
 
@@ -85,7 +86,8 @@ def boolean_strat(field):
 def datetime_strat(field):
     # MongoDB datetimes have only millisecond precision
     return strat.datetimes().map(
-        lambda dt: dt.replace(microsecond=(dt.microsecond // 1000 * 1000)))
+        lambda dt: dt.replace(microsecond=(dt.microsecond // 1000 * 1000))
+    )
 
 
 @field_strat(mongoengine.EmbeddedDocumentField)
@@ -104,15 +106,16 @@ def complex_datetime_strat(field):
 
 
 def mongodb_keys():
-    return strat.text(strat.characters(blacklist_characters='\0.$',
-                                       blacklist_categories=['Cs']))
+    return strat.text(
+        strat.characters(blacklist_characters="\0.$", blacklist_categories=["Cs"])
+    )
 
 
 @field_strat(mongoengine.MapField)
 def map_strat(field):
     return strat.dictionaries(
-        keys=mongodb_keys(),
-        values=_inner_field_values(field.field))
+        keys=mongodb_keys(), values=_inner_field_values(field.field)
+    )
 
 
 @field_strat(mongoengine.UUIDField)
@@ -173,5 +176,7 @@ def field_values(field):
 
 
 def documents(doc_class, **kwargs):
-    return strat.builds(doc_class, **{k: (kwargs.get(k) or field_values(v))
-                                      for k, v in doc_class._fields.items()})
+    return strat.builds(
+        doc_class,
+        **{k: (kwargs.get(k) or field_values(v)) for k, v in doc_class._fields.items()},
+    )

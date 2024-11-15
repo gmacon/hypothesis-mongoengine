@@ -8,8 +8,8 @@ from ..strategies import documents
 class Foo(Document):
     string = fields.StringField()
     required = fields.StringField(required=True)
-    choices = fields.StringField(choices=('foo', 'bar', 'baz'))
-    regex = fields.StringField(regex=r'^[a-z]*$')
+    choices = fields.StringField(choices=("foo", "bar", "baz"))
+    regex = fields.StringField(regex=r"^[a-z]*$")
     length = fields.StringField(min_length=1, max_length=3)
     strings = fields.ListField(fields.StringField())
     sorted_strings = fields.SortedListField(fields.StringField())
@@ -37,8 +37,7 @@ class Foo(Document):
     lines = fields.MultiLineStringField()
     polygons = fields.MultiPolygonField()
 
-    even_length_string = fields.StringField(
-        validation=lambda s: len(s) % 2 == 0)
+    even_length_string = fields.StringField(validation=lambda s: len(s) % 2 == 0)
 
     @fields.EmbeddedDocumentField
     class embedded_bar(EmbeddedDocument):
