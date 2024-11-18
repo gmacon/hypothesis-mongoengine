@@ -33,6 +33,9 @@ dependencies = [
 tests = [
     "pytest",
 ]
+dev = [
+    "ruff",
+]
 
 [project.urls]
 source = "https://github.com/gmacon/hypothesis-mongoengine"
