@@ -39,3 +39,11 @@ source = "https://github.com/gmacon/hypothesis-mongoengine"
 issues = "https://github.com/gmacon/hypothesis-mongoengine/issues"
 
 [tool.setuptools_scm]
+
+[tool.coverage.run]
+parallel = true
+branch = true
+source = ["hypothesis_mongoengine"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/py*/**/site-packages"]
