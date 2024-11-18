@@ -1,15 +1,14 @@
 Hypothesis Strategy for MongoEngine
 ===================================
 
-.. image:: https://travis-ci.org/gmacon/hypothesis-mongoengine.svg?branch=master
-
-This package contains a `Hypothesis <http://hypothesis.works/>`_ strategy for generating example documents from a `MongoEngine <http://mongoengine.org/>`_ model.
+This package contains a `Hypothesis <http://hypothesis.works/>`_ strategy
+for generating example documents from a `MongoEngine <http://mongoengine.org/>`_ model.
 
 Here's a minimal example:
 
 .. code:: python
 
-    from hypothesis import given, note
+    from hypothesis import given
     from hypothesis_mongoengine.strategies import documents
     from mongoengine import Document, StringField
 
@@ -20,13 +19,11 @@ Here's a minimal example:
 
     @given(documents(Foo))
     def test_something(foo):
-        # Handy since the default __repr__ is unhelpful:
-        note(foo.to_json())
-
         assert hasattr(foo, 'id')
 
 
-You can customize the generation of examples by passing alternate strategies for each field as keyword arguments:
+You can customize the generation of examples by passing alternate strategies
+for each field as keyword arguments:
 
 .. code:: python
 
@@ -34,7 +31,8 @@ You can customize the generation of examples by passing alternate strategies for
     def test_another thing(foo):
         pass
 
-By default, all examples that would validate against the built-in MongoEngine restrictions are generated.
+By default, all examples that would validate against
+the built-in MongoEngine restrictions are generated.
 If the field is not required, ``None`` will also be generated.
 If ``choices`` is specified, only those values will be generated.
 
@@ -47,16 +45,22 @@ What's Not Supported
 
 ``ReferenceField`` is not generically supported and probably will never be.
 You can, and should, provide an application-specific strategy for these fields.
-This permits you to ensure that the referential-integrity constraints needed by your application are satisfied.
-Don't forget that MongoEngine expects the documents to have been saved to the database before you try to reference them.
-You can use the ``hypothesis_mongoengine.helpers.mark_saved`` function to make a document appear as if saved.
+This permits you to ensure that the referential-integrity constraints
+needed by your application are satisfied.
+Don't forget that MongoEngine expects the documents to have been saved to the database
+before you try to reference them.
+You can use the ``hypothesis_mongoengine.helpers.mark_saved`` function
+to make a document appear as if saved.
 
 ``DictField`` is not generically supported and probably will never be.
-``MapField`` is supported generically and should be preferred to ``DictField`` when the values are homogenous.
+``MapField`` is supported generically and should be preferred to ``DictField``
+when the values are homogenous.
 When writing custom strategies for a ``DictField``,
-you can use the ``hypothesis_mongoengine.strategies.mongodb_keys`` strategy to generate the keys in the absence of more specific application knowledge about the keys.
+you can use the ``hypothesis_mongoengine.strategies.mongodb_keys`` strategy
+to generate the keys in the absence of more specific application knowledge about the keys.
 
-``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate only the explicitly-specified fields.
+``DynamicDocument`` (and ``DynamicEmbeddedDocument``) currently generate
+only the explicitly-specified fields.
 
 ``DynamicField`` is normally used internally by ``DynamicDocument``,
 but if you have a model which references it explicitly, it won't be handled generically.
@@ -65,17 +69,19 @@ Handling Custom Fields
 ----------------------
 
 If you have a custom field in use in your application,
-you can register a strategy to generate examples for it using the ``field_strat`` decorator.
+you can register a strategy to generate examples for it using the ``field_strategy`` decorator.
 
-For example, a strategy for the ``EnumField`` from `extras-mongoengine <https://github.com/MongoEngine/extras-mongoengine>`_ could look like this:
+For example, a strategy for the ``EnumField``
+from `extras-mongoengine <https://github.com/MongoEngine/extras-mongoengine>`_
+could look like this:
 
 .. code:: python
 
     from extras_mongoengine.fields import EnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine.strategies import field_strat
+    from hypothesis_mongoengine.strategies import field_strategy
 
-    @field_strat(EnumField)
+    @field_strategy(EnumField)
     def my_custom_strat(field):
         return strategies.sampled_from(field.enum)
 
@@ -87,10 +93,10 @@ You can, however, stack the decorator several times if you need to:
 
     from extras_mongoengine.fields import EnumField, IntEnumField, StringEnumField
     from hypothesis import strategies
-    from hypothesis_mongoengine.strategies import field_strat
+    from hypothesis_mongoengine.strategies import field_strategy
 
-    @field_strat(EnumField)
-    @field_strat(IntEnumField)
-    @field_strat(StringEnumField)
+    @field_strategy(EnumField)
+    @field_strategy(IntEnumField)
+    @field_strategy(StringEnumField)
     def my_custom_strat(field):
         return strategies.sampled_from(field.enum)

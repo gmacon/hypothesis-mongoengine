@@ -1,8 +1,8 @@
 from hypothesis import given
 from mongoengine import Document, ReferenceField
 
-from ..helpers import mark_saved
-from ..strategies import documents
+from hypothesis_mongoengine.helpers import mark_saved
+from hypothesis_mongoengine.strategies import documents
 
 
 class Target(Document):

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["version"]
+name = "hypothesis-mongoengine"
+authors = [
+    { name = "George Macon", email = "george.macon@gmail.com" },
+]
+description = "Hypothesis strategy for MongoEngine models"
+readme = "README.rst"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+    "Framework :: Hypothesis",
+]
+dependencies = [
+    "hypothesis",
+    "mongoengine",
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest",
+]
+dev = [
+    "ruff",
+]
+
+[project.urls]
+source = "https://github.com/gmacon/hypothesis-mongoengine"
+issues = "https://github.com/gmacon/hypothesis-mongoengine/issues"
+
+[tool.setuptools_scm]
+
+[tool.coverage.run]
+parallel = true
+branch = true
+source = ["hypothesis_mongoengine"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/py*/**/site-packages"]
