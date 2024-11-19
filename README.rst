@@ -40,6 +40,11 @@ If ``validation`` is specified, the default strategy will be filtered by the val
 If the custom validation function accepts too few values, Hypothesis may fail the health check.
 In that case, supply a custom validator that generates acceptable examples more efficiently.
 
+Depending on the level of control you have over the models,
+it might be useful to infer everything *except* whether or not a field is required.
+In that cause, you can use the provided ``field_values`` strategy
+but provide ``required=True`` as a keyword argument.
+
 What's Not Supported
 --------------------
 

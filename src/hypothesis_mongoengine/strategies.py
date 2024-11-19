@@ -179,8 +179,10 @@ def _inner_field_values(field):
     return values
 
 
-def field_values(field):
-    if field.required:
+def field_values(field, *, required=None):
+    if required is None:
+        required = field.required
+    if required:
         return _inner_field_values(field)
     else:
         return st.one_of(st.none(), _inner_field_values(field))
