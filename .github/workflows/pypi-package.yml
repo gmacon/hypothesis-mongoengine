@@ -47,12 +47,12 @@ jobs:
         with:
           name: Packages
           path: dist
-          verbose: true
 
       - name: Upload package to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+          verbose: true
 
   # Upload to real PyPI on GitHub Releases.
   release-pypi:
@@ -71,7 +71,8 @@ jobs:
         with:
           name: Packages
           path: dist
-          verbose: true
 
       - name: Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
