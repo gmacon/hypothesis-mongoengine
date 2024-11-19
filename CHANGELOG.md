@@ -2,6 +2,11 @@
 
 The code has been cleaned up to support newer versions of Hypothesis and Mongoengine.
 
+## New Features
+
+* The `field_values` strategy now accepts a `required` keyword argument
+  to override the inferred value.
+
 ## Breaking Changes
 
 * The `field_strat` decorator has been renamed to `field_strategy`.

@@ -2,7 +2,7 @@ import bson
 from hypothesis import given
 from mongoengine import Document, EmbeddedDocument, fields, ValidationError
 
-from hypothesis_mongoengine.strategies import documents
+from hypothesis_mongoengine.strategies import documents, field_values
 
 
 def validate_even_length_string(value):
@@ -75,3 +75,8 @@ def test_document_serializes_deserializes(doc):
     #    you get TypeError instead of a nice assertion.
     # 2) Binary. In Python 3, BSON deserializes Binary to bytes, but
     #    MongoEngine always casts to the bson.Binary wrapper.
+
+
+@given(documents(Foo, string=field_values(Foo.string, required=True)))
+def test_override_requires(doc):
+    doc.validate()  # Throws when invalid
