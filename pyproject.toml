@@ -42,6 +42,7 @@ source = "https://github.com/gmacon/hypothesis-mongoengine"
 issues = "https://github.com/gmacon/hypothesis-mongoengine/issues"
 
 [tool.setuptools_scm]
+local_scheme = "no-local-version"
 
 [tool.coverage.run]
 parallel = true
