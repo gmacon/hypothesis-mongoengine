@@ -38,8 +38,9 @@ dev = [
 ]
 
 [project.urls]
-source = "https://github.com/gmacon/hypothesis-mongoengine"
-issues = "https://github.com/gmacon/hypothesis-mongoengine/issues"
+Source = "https://github.com/gmacon/hypothesis-mongoengine"
+Issues = "https://github.com/gmacon/hypothesis-mongoengine/issues"
+Changelog = "https://github.com/gmacon/hypothesis-mongoengine/blob/main/CHANGELOG.md"
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
